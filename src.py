@@ -4,18 +4,54 @@ from PIL import Image
 import numpy as np
 import cv2
 
+# Set page configuration
 st.set_page_config(page_title="Object Detection", page_icon="", layout="wide")
 
+# Custom CSS for styling the button
+st.markdown("""
+    <style>
+    .centered-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px; /* Adjust height as needed */
+    }
+    .animated-button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .animated-button:hover {
+        background-color: white;
+        color: black;
+        border: 2px solid #4CAF50;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Page title
 st.markdown("<h1 style='text-align: center; color: navy;'> Object Detection </h1>", unsafe_allow_html=True)
+
+# Image upload widget
 image = st.file_uploader(label="Upload Your Image", type=["jpg", "png", "bmp", "jpeg", "webp"])
 
 
+# Function to perform detection of objects
 def predict(_img):
-    model = YOLO("yolov8x-oiv7.pt")
-    results = model(source=_img, conf=0.4)
+    model = YOLO("yolov8l-oiv7.pt")  # Load the pre-trained YOLO model
+    results = model(source=_img, conf=0.4) # Perform inference
     return results
 
-
+# Function to draw bounding boxes on the image
 def draw_boxes(image, results):
     img_array = np.array(image)
     for result in results:
@@ -35,18 +71,19 @@ def draw_boxes(image, results):
 
 
 
-
+# Main logic
 if image is None:
     st.text("Please upload your image")
 else:
     img = Image.open(image)
-    
+
     st.image(img, use_column_width=True)
 
     
-    if st.button("Analyse Image"):
+    if st.markdown('<div class="centered-button"><button class="animated-button">Analyse Image</button></div>', unsafe_allow_html=True):
 
         objects = predict(img)
+        
         for obj in objects:
             boxes = obj.boxes.xyxy.numpy()  
             confidences = obj.boxes.conf.numpy()  
