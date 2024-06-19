@@ -120,7 +120,7 @@ else:
         
         img_with_boxes = draw_boxes_YOLO(img, objects)
         st.image(img_with_boxes, caption="Image with detected objects", use_column_width=True)
-    if st.button("Analyze Image (SSD)"):
+    if st.button("Analyze Image with SSD"):
         objects = detect_SSD(img)
         img_with_boxes, detection_info = draw_boxes_SSD(img, objects, COCO_LABELS)
 
