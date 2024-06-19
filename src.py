@@ -5,7 +5,8 @@ import numpy as np
 import cv2
 
 st.set_page_config(page_title="Object Detection", page_icon="", layout="wide")
-
+#st.header("Object Detection")
+st.markdown("<h1 style='text-align: center; color: navy;'> Object Detection </h1>", unsafe_allow_html=True)
 image = st.file_uploader(label="Upload Your Image", type=["jpg", "png", "bmp", "jpeg", "webp"])
 
 @st.cache_resource
@@ -27,10 +28,8 @@ def draw_boxes(image, results):
             x1, y1, x2, y2 = map(int, box)
             label = f"{name}: {confidence:.2f}"
 
-            # Draw the bounding box
-            cv2.rectangle(img_array, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            # Draw the label
-            cv2.putText(img_array, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            cv2.rectangle(img_array, (x1, y1), (x2, y2), (255, 0, 0), 1)  # Red color with thickness 1
+            cv2.putText(img_array, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 0, 0), 1)  # Red color with thickness 1
 
     return Image.fromarray(img_array)
 
@@ -44,7 +43,8 @@ else:
 
     st.image(img, use_column_width=True)
 
-    if st.button("Detect"):
+    
+    if st.button("Analyse Image"):
 
         objects = predict(img)
         for obj in objects:
@@ -52,9 +52,9 @@ else:
             confidences = obj.boxes.conf.numpy()  # Confidences
             class_ids = obj.boxes.cls.numpy()  # Class IDs
 
-            for box, confidence, class_id in zip(boxes, confidences, class_ids):
+            for idx, (box, confidence, class_id) in enumerate(zip(boxes, confidences, class_ids)):
                 name = obj.names[int(class_id)]
-                st.write(f"Object: {name}, Confidence: {confidence:.2f}")
+                st.success(f"{idx + 1}. Object: {name}, Confidence: {confidence:.2f}")
                 st.write(f"Bounding box: (x1: {box[0]:.2f}, y1: {box[1]:.2f}, x2: {box[2]:.2f}, y2: {box[3]:.2f})")
         
         
