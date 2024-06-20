@@ -12,7 +12,7 @@ with open('coco_labels.json', 'r') as f:
 
 
 # Set page configuration
-st.set_page_config(page_title="Object Detection", page_icon="", layout="wide")
+st.set_page_config(page_title="Object Detection", page_icon="💸", layout="wide")
 
 # Page title
 st.markdown("<h1 style='text-align: center; color: navy;'> Object Detection </h1>", unsafe_allow_html=True)
